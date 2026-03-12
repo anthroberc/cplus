@@ -16,7 +16,6 @@ C+ is a modern, production-grade BASIC-style interpreter written in C++17. It's 
 - [Usage](#usage)
 - [Language Guide](#language-guide)
 - [Examples](#examples)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
@@ -72,9 +71,6 @@ See the [examples/](examples/) directory for more complex scripts like:
 - `hello_world.cp`
 - `loops.cp`
 - `fibonacci.cp`
-
-## Contributing
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
