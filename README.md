@@ -1,38 +1,80 @@
-# C+ Interpreter
+# C+ Programming Language
 
-A modern, production-grade BASIC-style interpreter written in C++17.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
+
+C+ is a modern, production-grade BASIC-style interpreter written in C++17. It's designed to be fast, simple, and extensible.
 
 ## Features
-- **Modern Syntax**: Clean, BASIC-inspired syntax (LET, PRINT, IF/THEN, FOR/NEXT).
-- **Optimized Execution**: AST-based execution with C++ smart pointer-based memory management.
-- **Robust CLI**: Supports running scripts, interactive REPL, and version checking.
-- **Error Handling**: Detailed Syntax and Runtime error reporting (Line X, Col Y).
+- **Modern Syntax**: Clean, BASIC-inspired syntax without line numbers.
+- **Robust Execution**: AST-based execution with smart pointer-based memory management.
+- **Advanced CLI**: Includes a REPL, script execution, and versioning.
+- **Detailed Error Reporting**: Comprehensive syntax and runtime error tracking.
 
-## Getting Started
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Language Guide](#language-guide)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Prerequisites
-- C++17 compatible compiler (e.g., clang++, g++).
+## Installation
 
-### Compiling
-To compile the interpreter, use the following command:
+### From Source
+You'll need a C++17 compatible compiler and CMake (optional but recommended).
+
 ```bash
+git clone https://github.com/sapirrior/cplus.git
+cd cplus
 clang++ -std=c++17 src/main.cpp src/core/*.cpp src/lexer/*.cpp src/parser/*.cpp src/interpreter/*.cpp -I src/ -o cplus
 ```
 
-### Usage
-- **Run a script**: `./cplus your_script.cp`
-- **Start REPL**: `./cplus`
-- **Check Version**: `./cplus -version`
-- **Help**: `./cplus -help`
+## Usage
 
-## Example Code (test.cp)
+### Run a Script
+```bash
+./cplus examples/hello_world.cp
+```
+
+### Interactive REPL
+```bash
+./cplus
+```
+
+### CLI Options
+- `-version`: Print the current version.
+- `-help`: Print usage instructions.
+
+## Language Guide
+
+### Variables
+Use `LET` to define variables.
 ```basic
 LET x = 10
-PRINT "Running FOR loop:"
-FOR i = 1 TO 5
-    PRINT x + i
-NEXT
-IF x > 5 THEN
-    PRINT "x is greater than 5"
-END IF
+LET name = "C+"
 ```
+
+### Control Flow
+Supports `IF/THEN/END IF` and `FOR/TO/NEXT` loops.
+```basic
+IF x > 5 THEN
+    PRINT "High"
+END IF
+
+FOR i = 1 TO 5
+    PRINT i
+NEXT
+```
+
+## Examples
+See the [examples/](examples/) directory for more complex scripts like:
+- `hello_world.cp`
+- `loops.cp`
+- `fibonacci.cp`
+
+## Contributing
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
