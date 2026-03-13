@@ -1,77 +1,65 @@
-# C+ Programming Language
+# C+ (C-Plus) Programming Language
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
+C+ is a modern, high-performance programming language designed for clarity, safety, and efficiency. It features a clean, block-based syntax and a robust standard library, making it an excellent choice for everything from systems programming to rapid application development.
 
-C+ is a modern, production-grade BASIC-style interpreter written in C++17. It's designed to be fast, simple, and extensible.
+## Key Features
 
-## Features
-- **Modern Syntax**: Clean, BASIC-inspired syntax without line numbers.
-- **Robust Execution**: AST-based execution with smart pointer-based memory management.
-- **Advanced CLI**: Includes a REPL, script execution, and versioning.
-- **Detailed Error Reporting**: Comprehensive syntax and runtime error tracking.
+- **Modern Syntax**: Uses a consistent, block-based structure for better readability and maintainability.
+- **Automated Memory Management**: Features built-in memory safety with automated cleanup, allowing you to focus on logic rather than manual memory allocation.
+- **Strongly Typed**: Provides type safety while remaining flexible enough for dynamic data structures.
+- **Cross-Platform**: Compiles and runs seamlessly on Linux, macOS, and Windows.
+- **Extensible Architecture**: Built with a modular C++20 core, designed for easy extension and high performance.
 
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Language Guide](#language-guide)
-- [Examples](#examples)
-- [Documentation](documentation/01-introduction.md)
-- [License](#license)
+## Getting Started
 
-## Installation
+### Installation
 
-### From Source
-You'll need a C++17 compatible compiler and CMake (optional but recommended).
+You can download the latest pre-compiled binaries for your platform from the [Releases](https://github.com/sapirrior/cplus/releases) page.
+
+To run a C+ script:
 
 ```bash
-git clone https://github.com/sapirrior/cplus.git
-cd cplus
-clang++ -std=c++17 src/main.cpp src/core/*.cpp src/lexer/*.cpp src/parser/*.cpp src/interpreter/*.cpp -I src/ -o cplus
+./cplus script.cp
 ```
 
-## Usage
+To enter the interactive REPL:
 
-### Run a Script
-```bash
-./cplus examples/hello_world.cp
-```
-
-### Interactive REPL
 ```bash
 ./cplus
 ```
 
-### CLI Options
-- `-version`: Print the current version.
-- `-help`: Print usage instructions.
+### Your First C+ Program
 
-## Language Guide
+Create a file named `hello.cp`:
 
-### Variables
-Use `LET` to define variables.
-```basic
-LET x = 10
-LET name = "C+"
+```cplus
+def greet(name) {
+    if (name == None) {
+        print("Hello, World!");
+    } else {
+        print("Hello, " + name + "!");
+    };
+};
+
+greet("Developer");
 ```
 
-### Control Flow
-Supports `IF/THEN/END IF` and `FOR/TO/NEXT` loops.
-```basic
-IF x > 5 THEN
-    PRINT "High"
-END IF
+Run it with: `./cplus hello.cp`
 
-FOR i = 1 TO 5
-    PRINT i
-NEXT
-```
+## Documentation
 
-## Examples
-See the [examples/](examples/) directory for more complex scripts like:
-- `hello_world.cp`
-- `loops.cp`
-- `fibonacci.cp`
+Comprehensive guides are available in the `documentation/` directory:
+
+1. [Introduction to C+](documentation/01-introduction.md)
+2. [Language Syntax](documentation/02-syntax.md)
+3. [Control Flow](documentation/03-control-flow.md)
+4. [Operators & Expressions](documentation/04-operators.md)
+5. [CLI Usage](documentation/05-cli-usage.md)
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more information.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+C+ is licensed under the MIT License.

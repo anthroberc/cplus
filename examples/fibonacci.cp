@@ -1,9 +1,13 @@
-PRINT "Calculating the first 10 Fibonacci numbers:"
-LET a = 0
-LET b = 1
-FOR i = 1 TO 10
-    PRINT a
-    LET next = a + b
-    LET a = b
-    LET b = next
-NEXT
+// Fibonacci sequence in C+
+def fib(n) {
+    if (n <= 1) {
+        return n;
+    };
+    return fib(n - 1) + fib(n - 2);
+};
+
+let i = 0;
+while (i < 10) {
+    print("Fibonacci " + i + ": " + fib(i));
+    i = i + 1;
+};

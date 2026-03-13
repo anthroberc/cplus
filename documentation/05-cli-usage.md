@@ -1,23 +1,21 @@
-# CLI & REPL Usage
+# Command Line Interface
 
-The C+ executable (`cplus`) offers several ways to run and interact with the language.
+The C+ interpreter provides a simple yet powerful CLI.
 
-## Running Script Files
-To execute a source file ending in `.cp`, provide the filename as an argument:
+## Running Scripts
+
+To execute a script file:
 ```bash
-./cplus examples/hello_world.cp
+./cplus script.cp
 ```
 
 ## Interactive REPL
-Running `cplus` without any arguments starts the Read-Eval-Print Loop (REPL). This allows you to type code and see results immediately.
+
+To enter the REPL mode for interactive testing:
 ```bash
 ./cplus
-> PRINT 1 + 2
-3
-> exit
 ```
-Type `exit` to quit the REPL.
 
-## Global Flags
-- `-version`: Displays the current version of the C+ interpreter as defined in `config.json`.
-- `-help`: Shows a quick summary of these command-line options.
+## Exit REPL
+
+To exit the REPL, use the keyboard shortcut `Ctrl + C` or `Ctrl + D`.

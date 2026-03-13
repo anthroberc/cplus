@@ -1,8 +1,10 @@
-LET x = 10
-PRINT "Running FOR loop:"
-FOR i = 1 TO 5
-PRINT x + i
-NEXT
-IF x > 5 THEN
-PRINT "x is greater than 5"
-END IF
+// Loop example in C+
+let count = 1;
+while (count <= 10) {
+    if (count == 5) {
+        print("Middle point reached!");
+    } else {
+        print("Count: " + count);
+    };
+    count = count + 1;
+};

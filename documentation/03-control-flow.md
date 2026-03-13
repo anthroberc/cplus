@@ -1,30 +1,35 @@
 # Control Flow in C+
 
-Control flow allows your program to make decisions and repeat actions using `IF` statements and `FOR` loops.
+C+ provides comprehensive control flow structures to manage program execution.
 
-## The IF Statement
-The `IF` statement evaluates a condition. If the condition is "truthy" (any non-zero number or non-empty string), it executes the code between `THEN` and `END IF`.
+## Conditional Statements
 
-```basic
-LET x = 10
-IF x > 5 THEN
-    PRINT "x is high!"
-END IF
+Use `if`, `elif`, and `else` to execute code based on conditions. Note that every control structure must end with a semicolon.
+
+```cplus
+if (x > 10) {
+    print("Greater than 10");
+} elif (x == 10) {
+    print("Exactly 10");
+} else {
+    print("Less than 10");
+};
 ```
 
-Note: Every `IF` must end with `END IF`.
+## Loops
 
-## The FOR Loop
-The `FOR` loop repeats a block of code for a specific range of numbers.
+The `while` loop continues execution as long as a condition is true.
 
-```basic
-FOR i = 1 TO 5
-    PRINT i
-NEXT
+```cplus
+let i = 0;
+while (i < 5) {
+    print(i);
+    i = i + 1;
+};
 ```
 
-### How it works:
-- `i = 1`: The loop starts with `i` equal to 1.
-- `TO 5`: The loop continues as long as `i` is less than or equal to 5.
-- `NEXT`: At the end of each pass, `i` increases by 1, and the loop starts again.
-- Every `FOR` loop must end with the `NEXT` keyword.
+## Loop Control
+
+- **break**: Exit the current loop immediately.
+- **continue**: Skip the rest of the current iteration and move to the next.
+- **pass**: A null operation that does nothing.
