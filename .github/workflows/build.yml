@@ -1,10 +1,10 @@
 name: build
 on:
-  release:
-    types: [created]
   push:
     tags:
       - 'v*'
+permissions:
+  contents: write
 jobs:
   build:
     name: build
@@ -26,6 +26,8 @@ jobs:
             target: cplus-windows-x64.exe
     runs-on: ${{ matrix.os }}
     steps:
+      - name: set-node-24
+        run: echo "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: get-version
         id: version
@@ -34,15 +36,6 @@ jobs:
           VERSION=$(jq -r .version config.json)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
-      - name: check-tag
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh release view ${{ env.VERSION }} --repo ${{ github.repository }} > /dev/null 2>&1 && [ "${{ github.event_name }}" == "push" ]; then
-            echo "Already released"
-            exit 0
-          fi
       - name: install-arm-linux
         if: matrix.platform == 'linux-arm64'
         run: sudo apt-get update && sudo apt-get install -y g++-aarch64-linux-gnu
@@ -63,9 +56,9 @@ jobs:
         run: g++ -std=c++20 src/main.cpp src/environment/*.cpp src/lexer/*.cpp src/parser/*.cpp src/ast/*.cpp -I src/ -o ${{ env.VERSION }}-${{ matrix.target }}
       - name: upload
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
         with:
           files: ${{ env.VERSION }}-${{ matrix.target }}
           tag_name: ${{ env.VERSION }}
+          make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
