@@ -15,29 +15,37 @@ Token Parser::consume(TokenType type, const std::string& message) {
 std::vector<std::shared_ptr<Stmt>> Parser::parse() {
     std::vector<std::shared_ptr<Stmt>> statements;
     while (!isAtEnd()) {
-        try { statements.push_back(declaration()); }
-        catch (const ParserError& e) {
+        try {
+            statements.push_back(declaration());
+        } catch (const ParserError& e) {
             std::cerr << e.what() << std::endl;
-            advance();
-            while (!isAtEnd()) {
-                if (previous().type == TokenType::SEMICOLON) break;
-                switch (peek().type) {
-                    case TokenType::DEF: case TokenType::LET: case TokenType::FOR:
-                    case TokenType::IF: case TokenType::WHILE: case TokenType::PRINT:
-                    case TokenType::RETURN: goto next_stmt;
-                    default: advance();
-                }
-            }
+            // Strict recovery: advance until semicolon or newline if possible, but we're being strict now
+            while (!isAtEnd() && peek().type != TokenType::SEMICOLON) advance();
+            if (!isAtEnd()) advance(); // consume semicolon
         }
-        next_stmt:;
     }
     return statements;
 }
 
 std::shared_ptr<Stmt> Parser::declaration() {
-    if (match(TokenType::DEF)) return functionDeclaration();
-    if (match(TokenType::LET)) return letDeclaration();
-    return statement();
+    std::shared_ptr<Stmt> stmt;
+    if (match(TokenType::DEF)) stmt = functionDeclaration();
+    else if (match(TokenType::LET)) stmt = letDeclaration();
+    else stmt = statement();
+    
+    // STRICT SEMICOLON ENFORCEMENT for everything that doesn't already consume its own
+    // Non-block statements already consume their semicolon.
+    // Block-based statements (IF, WHILE, DEF, TRY) will now ALSO require a semicolon.
+    if (auto blockBased = std::dynamic_pointer_cast<BlockStmt>(stmt)) {
+        consume(TokenType::SEMICOLON, "Expect ';' after block-based statement for strict compliance.");
+    } else if (std::dynamic_pointer_cast<IfStmt>(stmt) || 
+               std::dynamic_pointer_cast<WhileStmt>(stmt) ||
+               std::dynamic_pointer_cast<FunctionStmt>(stmt) ||
+               std::dynamic_pointer_cast<TryCatchStmt>(stmt)) {
+        consume(TokenType::SEMICOLON, "Expect ';' after control flow statement for strict compliance.");
+    }
+    
+    return stmt;
 }
 
 std::shared_ptr<Stmt> Parser::functionDeclaration() {
@@ -56,7 +64,7 @@ std::shared_ptr<Stmt> Parser::functionDeclaration() {
 std::shared_ptr<Stmt> Parser::letDeclaration() {
     Token name = consume(TokenType::IDENTIFIER, "Expect variable name.");
     std::shared_ptr<Expr> initializer = match(TokenType::EQUAL) ? expression() : nullptr;
-    consume(TokenType::SEMICOLON, "Expect ';' after declaration.");
+    consume(TokenType::SEMICOLON, "Expect ';' after variable declaration.");
     return std::make_shared<LetStmt>(name, initializer);
 }
 
@@ -66,9 +74,9 @@ std::shared_ptr<Stmt> Parser::statement() {
     if (match(TokenType::RETURN)) return returnStatement();
     if (match(TokenType::TRY)) return tryCatchStatement();
     if (match(TokenType::PRINT)) return printStatement();
-    if (match(TokenType::BREAK)) { consume(TokenType::SEMICOLON, "Expect ';'."); return std::make_shared<BreakStmt>(); }
-    if (match(TokenType::CONTINUE)) { consume(TokenType::SEMICOLON, "Expect ';'."); return std::make_shared<ContinueStmt>(); }
-    if (match(TokenType::PASS)) { consume(TokenType::SEMICOLON, "Expect ';'."); return std::make_shared<PassStmt>(); }
+    if (match(TokenType::BREAK)) { consume(TokenType::SEMICOLON, "Expect ';' after 'break'."); return std::make_shared<BreakStmt>(); }
+    if (match(TokenType::CONTINUE)) { consume(TokenType::SEMICOLON, "Expect ';' after 'continue'."); return std::make_shared<ContinueStmt>(); }
+    if (match(TokenType::PASS)) { consume(TokenType::SEMICOLON, "Expect ';' after 'pass'."); return std::make_shared<PassStmt>(); }
     if (match(TokenType::LEFT_BRACE)) return block();
     return expressionStatement();
 }
@@ -83,7 +91,7 @@ std::shared_ptr<Stmt> Parser::ifStatement() {
     while (match(TokenType::ELIF)) {
         consume(TokenType::LEFT_PAREN, "Expect '(' after 'elif'.");
         auto cond = expression();
-        consume(TokenType::RIGHT_PAREN, "Expect ')' after elif condition.");
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
         auto body = statement();
         elifs.push_back({cond, body});
     }
@@ -103,7 +111,7 @@ std::shared_ptr<Stmt> Parser::whileStatement() {
 std::shared_ptr<Stmt> Parser::returnStatement() {
     Token keyword = previous();
     std::shared_ptr<Expr> value = !check(TokenType::SEMICOLON) ? expression() : nullptr;
-    consume(TokenType::SEMICOLON, "Expect ';' after return.");
+    consume(TokenType::SEMICOLON, "Expect ';' after 'return'.");
     return std::make_shared<ReturnStmt>(keyword, value);
 }
 
@@ -118,13 +126,15 @@ std::shared_ptr<Stmt> Parser::tryCatchStatement() {
 
 std::shared_ptr<Stmt> Parser::printStatement() {
     auto value = expression();
-    consume(TokenType::SEMICOLON, "Expect ';' after value.");
+    consume(TokenType::SEMICOLON, "Expect ';' after 'print'.");
     return std::make_shared<PrintStmt>(value);
 }
 
 std::shared_ptr<Stmt> Parser::block() {
     std::vector<std::shared_ptr<Stmt>> statements;
-    while (!check(TokenType::RIGHT_BRACE) && !isAtEnd()) statements.push_back(declaration());
+    while (!check(TokenType::RIGHT_BRACE) && !isAtEnd()) {
+        statements.push_back(declaration());
+    }
     consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
     return std::make_shared<BlockStmt>(statements);
 }
